@@ -21,6 +21,8 @@ function App() {
   const viewClue = urlParams.get('clue');
 
   const [viewCopied, setViewCopied] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
+  
   const handleViewCopy = () => {
     if (viewCopyText) {
       navigator.clipboard.writeText(viewCopyText);
@@ -50,8 +52,21 @@ function App() {
             
             <div className="flex flex-col gap-3 w-full">
               {viewNum ? viewNum.split('\n').filter(line => line.trim()).map((line, index) => (
-                <div key={index} className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0 hide-scrollbar">
-                  {line}
+                <div key={index} className="flex items-center bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0">
+                  <div className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left flex-1 hide-scrollbar">
+                    {line}
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(line);
+                      setCopiedIndex(index);
+                      setTimeout(() => setCopiedIndex(null), 2000);
+                    }}
+                    className="p-4 h-full flex items-center justify-center border-l border-gray-200 hover:bg-gray-200 transition-colors text-gray-500 hover:text-red-600 shrink-0"
+                    title="Copy this line"
+                  >
+                    {copiedIndex === index ? <span className="text-xs font-bold text-red-600 px-1">Copied!</span> : <Copy size={18} />}
+                  </button>
                 </div>
               )) : (
                 <div className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0 hide-scrollbar">
@@ -70,7 +85,7 @@ function App() {
                 className="mt-5 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 py-2.5 rounded-xl font-bold transition-colors border border-red-100"
               >
                 <Copy size={18} />
-                {viewCopied ? 'Copied!' : 'Copy Data'}
+                {viewCopied ? 'Copied All!' : 'Copy All Data'}
               </button>
             )}
           </div>
