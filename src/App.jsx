@@ -40,11 +40,24 @@ function App() {
           <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
           <h1 className="text-3xl font-black text-white mb-6 uppercase tracking-wider">Round 3: QR Connection</h1>
           
-          <div className="bg-white rounded-2xl p-8 shadow-inner mb-6 transform hover:scale-105 transition-transform duration-300">
-            <p className="text-gray-500 font-bold text-sm uppercase mb-2">Secret Number Revealed</p>
-            <div className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-purple-800">
+          <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100">
+            <p className="text-gray-500 font-bold text-sm uppercase mb-3">Secret Data Revealed</p>
+            <div className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-purple-800 whitespace-pre-wrap break-all max-h-[40vh] overflow-y-auto leading-relaxed">
               {viewNum || '??'}
             </div>
+            {viewNum && (
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(viewNum);
+                  setViewCopied(true);
+                  setTimeout(() => setViewCopied(false), 2000);
+                }}
+                className="mt-5 w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 py-2.5 rounded-xl font-bold transition-colors border border-red-100"
+              >
+                <Copy size={18} />
+                {viewCopied ? 'Copied!' : 'Copy Data'}
+              </button>
+            )}
           </div>
           
           {viewClue && (
@@ -255,13 +268,13 @@ function App() {
                   <span className="text-2xl">🏆</span>
                   <p>Special mode for FESTRONIX 2K26! This creates a stunning themed webpage for participants to scan during "Round 3: QR Connection".</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 ml-1">Secret Number (for answer sheet)</label>
-                    <input 
-                      type="text" placeholder="e.g. 42" value={festData.num} onChange={e => setFestData({...festData, num: e.target.value})}
-                      className="w-full text-center text-2xl font-bold px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none"
-                    />
+                    <label className="text-sm font-semibold text-gray-700 ml-1">Secret Data (Text, Number, or Binary Block)</label>
+                    <textarea 
+                      rows="4" placeholder="e.g. 01001001 01101111 01010100" value={festData.num} onChange={e => setFestData({...festData, num: e.target.value})}
+                      className="w-full text-center text-lg font-bold px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none resize-none"
+                    ></textarea>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 ml-1">Extra Clue / Meaning (Optional)</label>
