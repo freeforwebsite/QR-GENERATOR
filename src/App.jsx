@@ -90,6 +90,7 @@ function App() {
               </button>
             )}
           </div>
+          )}
           
           {viewClue && (
             <div className="bg-black/40 rounded-xl p-5 text-left border border-white/10 mt-6 shadow-lg">
