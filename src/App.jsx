@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
   Download, Trash2, Link as LinkIcon, Type, Mail, Phone, Wifi, Image as ImageIcon, 
@@ -24,6 +24,16 @@ function App() {
   const [viewCopied, setViewCopied] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   
+  // Generate a string of random binary to pad the fake QR codes so they perfectly mimic the texture of real binary QR codes!
+  const BINARY_PAD = useMemo(() => {
+    let result = '';
+    for (let i = 0; i < 1000; i++) {
+      result += (Math.random() > 0.5 ? '1' : '0');
+      if ((i + 1) % 8 === 0) result += ' ';
+    }
+    return result;
+  }, []);
+
   const handleViewCopy = () => {
     if (viewCopyText) {
       navigator.clipboard.writeText(viewCopyText);
@@ -187,6 +197,15 @@ function App() {
           if (festData.clue) customUrl.searchParams.set('clue', festData.clue);
           if (festData.emoji) customUrl.searchParams.set('emoji', festData.emoji);
           if (festData.message) customUrl.searchParams.set('msg', festData.message);
+          
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; 
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', BINARY_PAD.substring(0, paddingAmount));
+            }
+          }
           value = customUrl.toString();
         }
         break;
@@ -197,6 +216,16 @@ function App() {
           if (pageData.text) customUrl.searchParams.set('text', pageData.text);
           if (pageData.imageUrl) customUrl.searchParams.set('img', pageData.imageUrl);
           if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
+          
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; 
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', BINARY_PAD.substring(0, paddingAmount));
+            }
+          }
+          
           value = customUrl.toString();
         }
         break;
