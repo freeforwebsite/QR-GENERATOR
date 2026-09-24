@@ -2,16 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
   Download, Trash2, Link as LinkIcon, Type, Mail, Phone, Wifi, Image as ImageIcon, 
-  Settings2, Palette, ChevronDown, Upload, QrCode, Smile, Copy
+  Settings2, Palette, ChevronDown, Upload, QrCode, Smile, Copy, Target
 } from 'lucide-react';
 
 function App() {
   // Check if we are in "View" mode
   const urlParams = new URLSearchParams(window.location.search);
+  
+  // Custom Page Params
   const viewEmoji = urlParams.get('emoji');
   const viewText = urlParams.get('text');
   const viewImageUrl = urlParams.get('img');
   const viewCopyText = urlParams.get('copy');
+  
+  // Festronix Round 3 Params
+  const viewFestronix = urlParams.get('festronix');
+  const viewNum = urlParams.get('num');
+  const viewClue = urlParams.get('clue');
 
   const [viewCopied, setViewCopied] = useState(false);
   const handleViewCopy = () => {
@@ -22,6 +29,41 @@ function App() {
     }
   };
 
+  // Render Festronix 2K26 Round 3 Special Page
+  if (viewFestronix) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black text-white flex flex-col items-center justify-center p-6 text-center font-sans relative overflow-hidden">
+        {/* Tech Background decoration */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+        
+        <div className="z-10 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl max-w-sm w-full animate-fade-in-up">
+          <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
+          <h1 className="text-3xl font-black text-white mb-6 uppercase tracking-wider">Round 3: QR Connection</h1>
+          
+          <div className="bg-white rounded-2xl p-8 shadow-inner mb-6 transform hover:scale-105 transition-transform duration-300">
+            <p className="text-gray-500 font-bold text-sm uppercase mb-2">Secret Number Revealed</p>
+            <div className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-purple-800">
+              {viewNum || '??'}
+            </div>
+          </div>
+          
+          {viewClue && (
+            <div className="bg-black/40 rounded-xl p-5 text-left border border-white/10 mt-6 shadow-lg">
+              <p className="text-red-300 text-xs font-bold uppercase mb-2">Technical Clue:</p>
+              <p className="text-white font-medium text-lg">{viewClue}</p>
+            </div>
+          )}
+
+          <div className="mt-8 pt-6 border-t border-white/20">
+            <p className="text-sm font-bold text-red-200 tracking-wider">SCAN • DECODE • CONNECT</p>
+            <p className="text-xs text-gray-300 mt-2">Write this number's meaning in your answer sheet quickly!</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render Custom Prank Page
   if (viewEmoji || viewText || viewImageUrl || viewCopyText) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 text-center">
@@ -48,7 +90,7 @@ function App() {
   }
 
   // --- Generator State ---
-  const [activeTab, setActiveTab] = useState('page');
+  const [activeTab, setActiveTab] = useState('festronix');
   
   // Data States
   const [linkData, setLinkData] = useState('');
@@ -56,9 +98,8 @@ function App() {
   const [emailData, setEmailData] = useState({ to: '', subject: '', body: '' });
   const [phoneData, setPhoneData] = useState('');
   const [wifiData, setWifiData] = useState({ ssid: '', password: '', encryption: 'WPA' });
-  
-  // Custom Page State
   const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time', imageUrl: '', copyText: '' });
+  const [festData, setFestData] = useState({ num: '', clue: '' });
   
   // Style States
   const [fgColor, setFgColor] = useState('#000000');
@@ -82,9 +123,17 @@ function App() {
   useEffect(() => {
     let value = '';
     switch (activeTab) {
+      case 'festronix':
+        if (festData.num || festData.clue) {
+          let customUrl = new URL(window.location.origin);
+          customUrl.searchParams.set('festronix', 'true');
+          if (festData.num) customUrl.searchParams.set('num', festData.num);
+          if (festData.clue) customUrl.searchParams.set('clue', festData.clue);
+          value = customUrl.toString();
+        }
+        break;
       case 'page':
         if (pageData.emoji || pageData.text || pageData.imageUrl || pageData.copyText) {
-          // Dynamically use the current domain (e.g., Vercel URL or localhost)
           let customUrl = new URL(window.location.origin);
           if (pageData.emoji) customUrl.searchParams.set('emoji', pageData.emoji);
           if (pageData.text) customUrl.searchParams.set('text', pageData.text);
@@ -114,7 +163,7 @@ function App() {
         break;
     }
     setQrValue(value);
-  }, [activeTab, linkData, textData, emailData, phoneData, wifiData, pageData]);
+  }, [activeTab, linkData, textData, emailData, phoneData, wifiData, pageData, festData]);
 
 
   const handleLogoUpload = (e) => {
@@ -158,11 +207,11 @@ function App() {
   };
 
   const tabs = [
+    { id: 'festronix', icon: Target, label: 'Round 3 (Festronix)' },
     { id: 'page', icon: Smile, label: 'Custom Page' },
     { id: 'link', icon: LinkIcon, label: 'Link' },
     { id: 'text', icon: Type, label: 'Text' },
     { id: 'email', icon: Mail, label: 'Email' },
-    { id: 'phone', icon: Phone, label: 'Phone' },
     { id: 'wifi', icon: Wifi, label: 'WiFi' },
   ];
 
@@ -174,10 +223,10 @@ function App() {
         <div className="w-full lg:w-2/3 bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-6 md:p-8 transition-all">
           
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">
+            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-indigo-600 mb-2">
               Festronix2K26 QR
             </h1>
-            <p className="text-gray-500 font-medium">Select a type, enter your data, and style your QR code.</p>
+            <p className="text-gray-500 font-medium">Select a type, enter your data, and generate your QR codes.</p>
           </div>
 
           {/* Type Selector Tabs */}
@@ -188,18 +237,43 @@ function App() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 min-w-[80px] flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl transition-all duration-300 ${
                   activeTab === tab.id 
-                    ? 'bg-white text-indigo-600 shadow-md scale-100' 
+                    ? (tab.id === 'festronix' ? 'bg-red-600 text-white shadow-md shadow-red-500/30' : 'bg-white text-indigo-600 shadow-md scale-100')
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50 scale-95 hover:scale-100'
                 }`}
               >
                 <tab.icon size={20} />
-                <span className="text-xs font-semibold">{tab.label}</span>
+                <span className="text-xs font-semibold whitespace-nowrap">{tab.label}</span>
               </button>
             ))}
           </div>
 
           {/* Input Fields based on active tab */}
           <div className="space-y-5 mb-10 min-h-[160px]">
+            {activeTab === 'festronix' && (
+              <div className="space-y-4">
+                <div className="p-4 bg-red-50 text-red-700 rounded-xl text-sm font-bold border border-red-200 flex items-start gap-3 shadow-sm">
+                  <span className="text-2xl">🏆</span>
+                  <p>Special mode for FESTRONIX 2K26! This creates a stunning themed webpage for participants to scan during "Round 3: QR Connection".</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700 ml-1">Secret Number (for answer sheet)</label>
+                    <input 
+                      type="text" placeholder="e.g. 42" value={festData.num} onChange={e => setFestData({...festData, num: e.target.value})}
+                      className="w-full text-center text-2xl font-bold px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700 ml-1">Extra Clue / Meaning (Optional)</label>
+                    <input 
+                      type="text" placeholder="e.g. Find the logic gate" value={festData.clue} onChange={e => setFestData({...festData, clue: e.target.value})}
+                      className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'page' && (
               <div className="space-y-4">
                 <div className="p-4 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-medium border border-indigo-100">
@@ -272,16 +346,6 @@ function App() {
                   <label className="text-sm font-semibold text-gray-700 ml-1">Message Body</label>
                   <textarea rows="2" placeholder="Write your email here..." value={emailData.body} onChange={e => setEmailData({...emailData, body: e.target.value})} className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none resize-none"></textarea>
                 </div>
-              </div>
-            )}
-
-            {activeTab === 'phone' && (
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 ml-1">Phone Number</label>
-                <input 
-                  type="tel" placeholder="+1 234 567 8900" value={phoneData} onChange={e => setPhoneData(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
-                />
               </div>
             )}
 
@@ -408,7 +472,7 @@ function App() {
               <button
                 onClick={handleDownload}
                 disabled={!qrValue}
-                className="w-full flex items-center justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-indigo-500/30 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-semibold text-lg transition-all duration-300"
+                className={`w-full flex items-center justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-white font-semibold text-lg transition-all duration-300 ${activeTab === 'festronix' ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 shadow-red-500/30' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-indigo-500/30'} disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <Download size={20} className="mr-2" />
                 Download PNG
