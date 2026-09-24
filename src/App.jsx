@@ -158,7 +158,6 @@ function App() {
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [logoImg, setLogoImg] = useState(null);
-  const [qrDensity, setQrDensity] = useState(25); // Default to a high density to match puzzles
 
   const [qrValue, setQrValue] = useState('');
   const [copied, setCopied] = useState(false);
@@ -183,6 +182,17 @@ function App() {
           customUrl.searchParams.set('festronix', 'true');
           if (festData.num) customUrl.searchParams.set('num', festData.num);
           if (festData.clue) customUrl.searchParams.set('clue', festData.clue);
+          
+          // Force all Festronix QR codes to look identical by padding the URL length
+          // This prevents participants from distinguishing real vs fake codes by density!
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+            }
+          }
           value = customUrl.toString();
         }
         break;
@@ -193,6 +203,18 @@ function App() {
           if (pageData.text) customUrl.searchParams.set('text', pageData.text);
           if (pageData.imageUrl) customUrl.searchParams.set('img', pageData.imageUrl);
           if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
+          
+          // Force Custom Page QR codes to also look identical by padding the URL length
+          // This ensures the fake 'better luck next time' codes match the real Festronix codes!
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+            }
+          }
+          
           value = customUrl.toString();
         }
         break;
@@ -483,21 +505,6 @@ function App() {
                   </div>
                 )}
               </div>
-              
-              {/* Density Control */}
-              <div className="space-y-3 bg-white/40 p-5 rounded-2xl border border-gray-50 md:col-span-2">
-                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">QR Code Complexity (Disguise Density)</h3>
-                <p className="text-xs text-gray-600 font-medium leading-relaxed">Lock the grid density so your real binary QR codes and your fake 'better luck next time' QR codes look absolutely identical. (Set both to 25 or 30).</p>
-                <select value={qrDensity} onChange={e => setQrDensity(Number(e.target.value))} className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-semibold text-gray-700">
-                  <option value={0}>Auto (Changes based on data size)</option>
-                  <option value={10}>Level 10 (Low Density)</option>
-                  <option value={15}>Level 15 (Medium Density)</option>
-                  <option value={20}>Level 20 (High Density)</option>
-                  <option value={25}>Level 25 (Very High Density)</option>
-                  <option value={30}>Level 30 (Extreme Density)</option>
-                  <option value={40}>Level 40 (Maximum Density)</option>
-                </select>
-              </div>
 
             </div>
           </div>
@@ -524,7 +531,6 @@ function App() {
                     value={qrValue} 
                     size={256}
                     level="H"
-                    minVersion={qrDensity > 0 ? qrDensity : undefined}
                     fgColor={fgColor}
                     bgColor={bgColor}
                     includeMargin={true}
