@@ -42,7 +42,7 @@ function App() {
           
           <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100">
             <p className="text-gray-500 font-bold text-sm uppercase mb-3">Secret Data Revealed</p>
-            <div className="text-base md:text-lg font-mono font-bold text-red-700 whitespace-pre overflow-x-auto max-h-[40vh] overflow-y-auto leading-relaxed pb-2 text-left bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-inner">
+            <div className="text-sm md:text-base font-mono text-gray-800 whitespace-pre overflow-x-auto max-h-[40vh] overflow-y-auto leading-relaxed p-4 text-left bg-[#f4f4f5] rounded-md shadow-inner">
               {viewNum || '??'}
             </div>
             {viewNum && (
