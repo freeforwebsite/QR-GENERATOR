@@ -19,6 +19,7 @@ function App() {
   const viewFestronix = urlParams.get('festronix');
   const viewNum = urlParams.get('num');
   const viewClue = urlParams.get('clue');
+  const viewMessage = urlParams.get('msg');
 
   const [viewCopied, setViewCopied] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
@@ -47,7 +48,18 @@ function App() {
           <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
           <h1 className="text-3xl font-black text-white mb-6 uppercase tracking-wider">Round 3: QR Connection</h1>
           
-          <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100 flex flex-col">
+          {viewEmoji && (
+            <div className="text-7xl md:text-8xl mb-6 animate-bounce drop-shadow-2xl">{viewEmoji}</div>
+          )}
+          
+          {viewMessage && (
+            <h2 className="text-2xl font-black text-white mb-6 leading-relaxed drop-shadow-md bg-red-600/40 p-5 rounded-2xl border border-red-400/50">
+              {viewMessage}
+            </h2>
+          )}
+          
+          {viewNum && (
+            <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100 flex flex-col">
             <p className="text-gray-500 font-bold text-sm uppercase mb-3 shrink-0">Secret Data Revealed</p>
             
             <div className="flex flex-col gap-3 w-full">
@@ -142,7 +154,7 @@ function App() {
   const [phoneData, setPhoneData] = useState('');
   const [wifiData, setWifiData] = useState({ ssid: '', password: '', encryption: 'WPA' });
   const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time', imageUrl: '', copyText: '' });
-  const [festData, setFestData] = useState({ num: '', clue: '' });
+  const [festData, setFestData] = useState({ num: '', clue: '', emoji: '', message: '' });
   
   // Style States
   const [fgColor, setFgColor] = useState('#000000');
@@ -167,11 +179,13 @@ function App() {
     let value = '';
     switch (activeTab) {
       case 'festronix':
-        if (festData.num || festData.clue) {
+        if (festData.num || festData.clue || festData.emoji || festData.message) {
           let customUrl = new URL(window.location.origin);
           customUrl.searchParams.set('festronix', 'true');
           if (festData.num) customUrl.searchParams.set('num', festData.num);
           if (festData.clue) customUrl.searchParams.set('clue', festData.clue);
+          if (festData.emoji) customUrl.searchParams.set('emoji', festData.emoji);
+          if (festData.message) customUrl.searchParams.set('msg', festData.message);
           value = customUrl.toString();
         }
         break;
@@ -301,6 +315,26 @@ function App() {
                   <p>Special mode for FESTRONIX 2K26! This creates a stunning themed webpage for participants to scan during "Round 3: QR Connection".</p>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
+                  <div className="bg-red-50 p-4 rounded-xl border border-red-100 space-y-4">
+                    <h3 className="font-bold text-red-800 text-sm">Prank Mode / Custom Message</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-gray-700 ml-1">Emoji (e.g. 😌)</label>
+                        <input 
+                          type="text" placeholder="😌" value={festData.emoji} onChange={e => setFestData({...festData, emoji: e.target.value})}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-gray-700 ml-1">Message Text</label>
+                        <input 
+                          type="text" placeholder="better luck next time" value={festData.message} onChange={e => setFestData({...festData, message: e.target.value})}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700 ml-1">Secret Data (Text, Number, or Binary Block)</label>
                     <textarea 
