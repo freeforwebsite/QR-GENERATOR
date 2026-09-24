@@ -24,12 +24,15 @@ function App() {
   const [viewCopied, setViewCopied] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   
-  // Generate a random string ONCE per session to pad URLs without causing the QR code to flicker or look artificial
-  const RANDOM_PAD = useMemo(() => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  // Generate a realistic binary string to pad ALL QR codes so they are perfectly identical in density and texture
+  const BINARY_WORD_PAD = useMemo(() => {
     let result = '';
-    for (let i = 0; i < 500; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    for (let i = 0; i < 150; i++) {
+      let word = '';
+      for (let j = 0; j < 8; j++) {
+        word += Math.random() > 0.5 ? '1' : '0';
+      }
+      result += word + ' ';
     }
     return result;
   }, []);
@@ -68,7 +71,7 @@ function App() {
             </h2>
           )}
 
-          {viewNum && (
+          {viewNum && !viewMessage && (
             <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100 flex flex-col">
             <p className="text-gray-500 font-bold text-sm uppercase mb-3 shrink-0">Secret Data Revealed</p>
             
@@ -113,7 +116,7 @@ function App() {
           </div>
           )}
           
-          {viewClue && (
+          {viewClue && !viewMessage && (
             <div className="bg-black/40 rounded-xl p-5 text-left border border-white/10 mt-6 shadow-lg">
               <p className="text-red-300 text-xs font-bold uppercase mb-2">Technical Clue:</p>
               <p className="text-white font-medium text-lg">{viewClue}</p>
@@ -199,11 +202,11 @@ function App() {
           if (festData.message) customUrl.searchParams.set('msg', festData.message);
           
           let currentUrlStr = customUrl.toString();
-          let targetLength = 300; 
+          let targetLength = 400; 
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+              customUrl.searchParams.set('_pad', BINARY_WORD_PAD.substring(0, paddingAmount));
             }
           }
           value = customUrl.toString();
@@ -218,11 +221,11 @@ function App() {
           if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
           
           let currentUrlStr = customUrl.toString();
-          let targetLength = 300; 
+          let targetLength = 400; 
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+              customUrl.searchParams.set('_pad', BINARY_WORD_PAD.substring(0, paddingAmount));
             }
           }
           
