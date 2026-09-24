@@ -172,6 +172,17 @@ function App() {
           customUrl.searchParams.set('festronix', 'true');
           if (festData.num) customUrl.searchParams.set('num', festData.num);
           if (festData.clue) customUrl.searchParams.set('clue', festData.clue);
+          
+          // Force all Festronix QR codes to look identical by padding the URL length
+          // This prevents participants from distinguishing real vs fake codes by density!
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
+            }
+          }
           value = customUrl.toString();
         }
         break;
