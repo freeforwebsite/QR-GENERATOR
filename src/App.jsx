@@ -32,24 +32,29 @@ function App() {
   // Render Festronix 2K26 Round 3 Special Page
   if (viewFestronix) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black text-white flex flex-col items-center justify-center p-6 text-center font-sans relative overflow-hidden">
-        {/* Tech Background decoration */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black text-white flex flex-col items-center justify-center p-6 py-12 text-center font-sans relative overflow-y-auto">
+        <style>{`
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}</style>
         
-        <div className="z-10 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl max-w-sm w-full animate-fade-in-up">
+        {/* Tech Background decoration */}
+        <div className="fixed top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+        
+        <div className="z-10 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl max-w-sm w-full">
           <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
           <h1 className="text-3xl font-black text-white mb-6 uppercase tracking-wider">Round 3: QR Connection</h1>
           
           <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100 flex flex-col">
             <p className="text-gray-500 font-bold text-sm uppercase mb-3 shrink-0">Secret Data Revealed</p>
             
-            <div className="flex flex-col gap-3 max-h-[45vh] overflow-y-auto pb-2 w-full">
+            <div className="flex flex-col gap-3 w-full">
               {viewNum ? viewNum.split('\n').filter(line => line.trim()).map((line, index) => (
-                <div key={index} className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0">
+                <div key={index} className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0 hide-scrollbar">
                   {line}
                 </div>
               )) : (
-                <div className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0">
+                <div className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0 hide-scrollbar">
                   ??
                 </div>
               )}
