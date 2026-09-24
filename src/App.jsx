@@ -199,7 +199,7 @@ function App() {
           if (festData.message) customUrl.searchParams.set('msg', festData.message);
           
           let currentUrlStr = customUrl.toString();
-          let targetLength = 800; 
+          let targetLength = 300; 
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
@@ -218,7 +218,7 @@ function App() {
           if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
           
           let currentUrlStr = customUrl.toString();
-          let targetLength = 800; 
+          let targetLength = 300; 
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
