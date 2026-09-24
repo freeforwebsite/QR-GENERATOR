@@ -42,17 +42,14 @@ function App() {
   const qrRef = useRef(null);
   const logoInputRef = useRef(null);
 
-  // Use the local IP for the phone to access the dev server
-  const LOCAL_IP = '192.168.48.1';
-  const PORT = '5173';
-
   // Generate QR Value based on active tab
   useEffect(() => {
     let value = '';
     switch (activeTab) {
       case 'page':
         if (pageData.emoji || pageData.text) {
-          value = `http://${LOCAL_IP}:${PORT}/?emoji=${encodeURIComponent(pageData.emoji)}&text=${encodeURIComponent(pageData.text)}`;
+          // Dynamically use the current domain (e.g., Vercel URL or localhost)
+          value = `${window.location.origin}/?emoji=${encodeURIComponent(pageData.emoji)}&text=${encodeURIComponent(pageData.text)}`;
         }
         break;
       case 'link':
