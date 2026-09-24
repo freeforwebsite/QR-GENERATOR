@@ -193,6 +193,18 @@ function App() {
           if (pageData.text) customUrl.searchParams.set('text', pageData.text);
           if (pageData.imageUrl) customUrl.searchParams.set('img', pageData.imageUrl);
           if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
+          
+          // Force Custom Page QR codes to also look identical by padding the URL length
+          // This ensures the fake 'better luck next time' codes match the real Festronix codes!
+          let currentUrlStr = customUrl.toString();
+          let targetLength = 800; 
+          if (currentUrlStr.length < targetLength) {
+            let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
+            if (paddingAmount > 0) {
+              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
+            }
+          }
+          
           value = customUrl.toString();
         }
         break;
