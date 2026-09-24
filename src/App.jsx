@@ -40,11 +40,21 @@ function App() {
           <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
           <h1 className="text-3xl font-black text-white mb-6 uppercase tracking-wider">Round 3: QR Connection</h1>
           
-          <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100">
-            <p className="text-gray-500 font-bold text-sm uppercase mb-3">Secret Data Revealed</p>
-            <div className="text-sm md:text-base font-mono text-gray-800 whitespace-pre overflow-x-auto max-h-[40vh] overflow-y-auto leading-relaxed p-4 text-left bg-[#f4f4f5] rounded-md shadow-inner">
-              {viewNum || '??'}
+          <div className="bg-white rounded-2xl p-6 shadow-inner mb-6 w-full max-w-full overflow-hidden border-2 border-red-100 flex flex-col">
+            <p className="text-gray-500 font-bold text-sm uppercase mb-3 shrink-0">Secret Data Revealed</p>
+            
+            <div className="flex flex-col gap-3 max-h-[45vh] overflow-y-auto pb-2 w-full">
+              {viewNum ? viewNum.split('\n').filter(line => line.trim()).map((line, index) => (
+                <div key={index} className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0">
+                  {line}
+                </div>
+              )) : (
+                <div className="text-sm md:text-base font-mono text-gray-800 whitespace-nowrap overflow-x-auto p-4 text-left bg-[#f4f4f5] rounded-md shadow-sm border border-gray-200 shrink-0">
+                  ??
+                </div>
+              )}
             </div>
+
             {viewNum && (
               <button
                 onClick={() => {
