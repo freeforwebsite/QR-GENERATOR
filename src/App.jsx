@@ -11,13 +11,38 @@ function App() {
   const viewEmoji = urlParams.get('emoji');
   const viewText = urlParams.get('text');
   const viewImageUrl = urlParams.get('img');
+  const viewCopyText = urlParams.get('copy');
 
-  if (viewEmoji || viewText || viewImageUrl) {
+  const [viewCopied, setViewCopied] = useState(false);
+  const handleViewCopy = () => {
+    if (viewCopyText) {
+      navigator.clipboard.writeText(viewCopyText);
+      setViewCopied(true);
+      setTimeout(() => setViewCopied(false), 2000);
+    }
+  };
+
+  if (viewEmoji || viewText || viewImageUrl || viewCopyText) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 text-center">
         {viewImageUrl && <img src={viewImageUrl} alt="Custom" className="max-w-full max-h-[50vh] rounded-2xl shadow-xl mb-6" />}
         {!viewImageUrl && viewEmoji && <div className="text-[120px] md:text-[180px] leading-none mb-6 animate-bounce">{viewEmoji}</div>}
         {viewText && <h1 className="text-4xl md:text-6xl font-black text-gray-800 tracking-tight mt-4">{viewText}</h1>}
+        
+        {viewCopyText && (
+          <div className="mt-10 flex flex-col items-center gap-4">
+            <div className="bg-white px-8 py-5 rounded-2xl border border-gray-200 shadow-sm text-gray-800 font-mono text-xl max-w-md break-all">
+              {viewCopyText}
+            </div>
+            <button
+              onClick={handleViewCopy}
+              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3.5 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <Copy size={20} />
+              {viewCopied ? 'Copied to Clipboard!' : 'Copy Text'}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -33,7 +58,7 @@ function App() {
   const [wifiData, setWifiData] = useState({ ssid: '', password: '', encryption: 'WPA' });
   
   // Custom Page State
-  const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time', imageUrl: '' });
+  const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time', imageUrl: '', copyText: '' });
   
   // Style States
   const [fgColor, setFgColor] = useState('#000000');
@@ -58,12 +83,13 @@ function App() {
     let value = '';
     switch (activeTab) {
       case 'page':
-        if (pageData.emoji || pageData.text || pageData.imageUrl) {
+        if (pageData.emoji || pageData.text || pageData.imageUrl || pageData.copyText) {
           // Dynamically use the current domain (e.g., Vercel URL or localhost)
           let customUrl = new URL(window.location.origin);
           if (pageData.emoji) customUrl.searchParams.set('emoji', pageData.emoji);
           if (pageData.text) customUrl.searchParams.set('text', pageData.text);
           if (pageData.imageUrl) customUrl.searchParams.set('img', pageData.imageUrl);
+          if (pageData.copyText) customUrl.searchParams.set('copy', pageData.copyText);
           value = customUrl.toString();
         }
         break;
@@ -198,6 +224,13 @@ function App() {
                     <label className="text-sm font-semibold text-gray-700 ml-1">Or Image URL (instead of emoji)</label>
                     <input 
                       type="url" placeholder="https://example.com/image.png" value={pageData.imageUrl} onChange={e => setPageData({...pageData, imageUrl: e.target.value})}
+                      className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-4 mt-2">
+                    <label className="text-sm font-semibold text-gray-700 ml-1">Copyable Text (Adds a 'Copy' button on the prank page)</label>
+                    <input 
+                      type="text" placeholder="e.g. 01001001 01101111 01010100" value={pageData.copyText} onChange={e => setPageData({...pageData, copyText: e.target.value})}
                       className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                     />
                   </div>
