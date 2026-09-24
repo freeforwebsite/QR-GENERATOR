@@ -10,12 +10,14 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const viewEmoji = urlParams.get('emoji');
   const viewText = urlParams.get('text');
+  const viewImageUrl = urlParams.get('img');
 
-  if (viewEmoji || viewText) {
+  if (viewEmoji || viewText || viewImageUrl) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 text-center">
-        {viewEmoji && <div className="text-[120px] md:text-[180px] leading-none mb-6 animate-bounce">{viewEmoji}</div>}
-        {viewText && <h1 className="text-4xl md:text-6xl font-black text-gray-800 tracking-tight">{viewText}</h1>}
+        {viewImageUrl && <img src={viewImageUrl} alt="Custom" className="max-w-full max-h-[50vh] rounded-2xl shadow-xl mb-6" />}
+        {!viewImageUrl && viewEmoji && <div className="text-[120px] md:text-[180px] leading-none mb-6 animate-bounce">{viewEmoji}</div>}
+        {viewText && <h1 className="text-4xl md:text-6xl font-black text-gray-800 tracking-tight mt-4">{viewText}</h1>}
       </div>
     );
   }
@@ -31,7 +33,7 @@ function App() {
   const [wifiData, setWifiData] = useState({ ssid: '', password: '', encryption: 'WPA' });
   
   // Custom Page State
-  const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time' });
+  const [pageData, setPageData] = useState({ emoji: '😌', text: 'better luck next time', imageUrl: '' });
   
   // Style States
   const [fgColor, setFgColor] = useState('#000000');
@@ -47,9 +49,13 @@ function App() {
     let value = '';
     switch (activeTab) {
       case 'page':
-        if (pageData.emoji || pageData.text) {
+        if (pageData.emoji || pageData.text || pageData.imageUrl) {
           // Dynamically use the current domain (e.g., Vercel URL or localhost)
-          value = `${window.location.origin}/?emoji=${encodeURIComponent(pageData.emoji)}&text=${encodeURIComponent(pageData.text)}`;
+          let customUrl = new URL(window.location.origin);
+          if (pageData.emoji) customUrl.searchParams.set('emoji', pageData.emoji);
+          if (pageData.text) customUrl.searchParams.set('text', pageData.text);
+          if (pageData.imageUrl) customUrl.searchParams.set('img', pageData.imageUrl);
+          value = customUrl.toString();
         }
         break;
       case 'link':
@@ -162,7 +168,7 @@ function App() {
             {activeTab === 'page' && (
               <div className="space-y-4">
                 <div className="p-4 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-medium border border-indigo-100">
-                  This creates a QR code that opens a webpage on the scanner's phone showing a giant emoji and a custom message!
+                  This creates a QR code that opens a webpage on the scanner's phone showing an image (or emoji) and a custom message!
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="space-y-2 md:col-span-1">
@@ -176,6 +182,13 @@ function App() {
                     <label className="text-sm font-semibold text-gray-700 ml-1">Message Text</label>
                     <input 
                       type="text" placeholder="better luck next time" value={pageData.text} onChange={e => setPageData({...pageData, text: e.target.value})}
+                      className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-4 mt-2">
+                    <label className="text-sm font-semibold text-gray-700 ml-1">Or Image URL (instead of emoji)</label>
+                    <input 
+                      type="url" placeholder="https://example.com/image.png" value={pageData.imageUrl} onChange={e => setPageData({...pageData, imageUrl: e.target.value})}
                       className="w-full px-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
                     />
                   </div>
