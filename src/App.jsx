@@ -34,14 +34,14 @@ function App() {
   // Render Festronix 2K26 Round 3 Special Page
   if (viewFestronix) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black text-white flex flex-col items-center justify-center p-6 py-12 text-center font-sans relative overflow-y-auto">
+      <div className="min-h-screen text-white flex flex-col items-center justify-center p-6 py-12 text-center font-sans relative overflow-y-auto bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url("/festronix-bg.jpg")' }}>
         <style>{`
           .hide-scrollbar::-webkit-scrollbar { display: none; }
           .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}</style>
         
-        {/* Tech Background decoration */}
-        <div className="fixed top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+        {/* Dark overlay for readability */}
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm pointer-events-none"></div>
         
         <div className="z-10 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl max-w-sm w-full">
           <h2 className="text-xl font-bold tracking-widest text-red-200 mb-1">FESTRONIX 2K26</h2>
@@ -259,8 +259,10 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-indigo-100 via-white to-purple-100 font-sans">
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-start">
+    <div className="min-h-screen p-4 md:p-8 font-sans bg-cover bg-center bg-fixed relative" style={{ backgroundImage: 'url("/festronix-bg.jpg")' }}>
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-none"></div>
+      
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-start relative z-10">
         
         {/* Left Column - Controls */}
         <div className="w-full lg:w-2/3 bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-6 md:p-8 transition-all">
