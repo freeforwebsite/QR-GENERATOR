@@ -175,7 +175,7 @@ function App() {
           
           <div className="mb-8">
             <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">
-              Advanced QR Generator
+              Festronix2K26 QR
             </h1>
             <p className="text-gray-500 font-medium">Select a type, enter your data, and style your QR code.</p>
           </div>
