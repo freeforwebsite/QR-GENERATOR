@@ -24,12 +24,12 @@ function App() {
   const [viewCopied, setViewCopied] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   
-  // Generate a string of random binary to pad the fake QR codes so they perfectly mimic the texture of real binary QR codes!
-  const BINARY_PAD = useMemo(() => {
+  // Generate a random string ONCE per session to pad URLs without causing the QR code to flicker or look artificial
+  const RANDOM_PAD = useMemo(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
-    for (let i = 0; i < 1000; i++) {
-      result += (Math.random() > 0.5 ? '1' : '0');
-      if ((i + 1) % 8 === 0) result += ' ';
+    for (let i = 0; i < 500; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
   }, []);
@@ -203,7 +203,7 @@ function App() {
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
+              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
             }
           }
           value = customUrl.toString();
@@ -222,7 +222,7 @@ function App() {
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; 
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
+              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
             }
           }
           
