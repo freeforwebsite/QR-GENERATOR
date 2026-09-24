@@ -190,7 +190,7 @@ function App() {
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
             }
           }
           value = customUrl.toString();
@@ -211,7 +211,7 @@ function App() {
           if (currentUrlStr.length < targetLength) {
             let paddingAmount = targetLength - currentUrlStr.length - 6; // 6 is for "&_pad="
             if (paddingAmount > 0) {
-              customUrl.searchParams.set('_pad', RANDOM_PAD.substring(0, paddingAmount));
+              customUrl.searchParams.set('_pad', 'X'.repeat(paddingAmount));
             }
           }
           
