@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
   Download, Trash2, Link as LinkIcon, Type, Mail, Phone, Wifi, Image as ImageIcon, 
-  Settings2, Palette, ChevronDown, Upload, QrCode, Smile
+  Settings2, Palette, ChevronDown, Upload, QrCode, Smile, Copy
 } from 'lucide-react';
 
 function App() {
@@ -41,8 +41,17 @@ function App() {
   const [logoImg, setLogoImg] = useState(null);
 
   const [qrValue, setQrValue] = useState('');
+  const [copied, setCopied] = useState(false);
   const qrRef = useRef(null);
   const logoInputRef = useRef(null);
+
+  const handleCopy = () => {
+    if (qrValue) {
+      navigator.clipboard.writeText(qrValue);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   // Generate QR Value based on active tab
   useEffect(() => {
@@ -362,14 +371,25 @@ function App() {
               )}
             </div>
 
-            <button
-              onClick={handleDownload}
-              disabled={!qrValue}
-              className="w-full flex items-center justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-indigo-500/30 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-semibold text-lg transition-all duration-300"
-            >
-              <Download size={20} className="mr-2" />
-              Download PNG
-            </button>
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                onClick={handleDownload}
+                disabled={!qrValue}
+                className="w-full flex items-center justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-indigo-500/30 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-semibold text-lg transition-all duration-300"
+              >
+                <Download size={20} className="mr-2" />
+                Download PNG
+              </button>
+              
+              <button
+                onClick={handleCopy}
+                disabled={!qrValue}
+                className="w-full flex items-center justify-center py-3.5 px-4 border-2 border-indigo-100 rounded-xl text-indigo-600 bg-white hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-semibold text-lg transition-all duration-300"
+              >
+                <Copy size={20} className="mr-2" />
+                {copied ? 'Copied to clipboard!' : 'Copy Link / Text'}
+              </button>
+            </div>
             
           </div>
         </div>
